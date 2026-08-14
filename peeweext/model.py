@@ -99,7 +99,12 @@ class Model(pw.Model, metaclass=ModelMeta):
         recursive = kwargs.get('recursive', False)
         delete_nullable = kwargs.get('delete_nullable', False)
         if recursive:
-            dependencies = self.dependencies(delete_nullable)
+            # search_nullable must always be True here: this only controls
+            # which dependents peewee *discovers*, and we still need to find
+            # nullable ones so the branch below can null them out. Whether a
+            # nullable dependent gets nulled or deleted is governed by
+            # `delete_nullable` in the loop, not by this call.
+            dependencies = self.dependencies(True)
             for query, fk in reversed(list(dependencies)):
                 fk_model = fk.model
                 if fk.null and not delete_nullable:
