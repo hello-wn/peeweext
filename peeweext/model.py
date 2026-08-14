@@ -124,7 +124,7 @@ class Model(pw.Model, metaclass=ModelMeta):
         if only:
             items = []
             for field in only:
-                if isinstance(field, pw.basestring):
+                if isinstance(field, str):
                     name = field
                 else:
                     name = field.name
